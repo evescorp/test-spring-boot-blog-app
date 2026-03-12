@@ -37,6 +37,12 @@ OR
 
 And open   `http://localhost:8080` on your browser
 
+### Dark mode
+
+- Use the `Dark mode`/`Light mode` toggle in the top navigation bar.
+- The selected theme is saved in browser `localStorage` using key `app-theme`.
+- No additional Spring profile or Docker configuration is required.
+
 Optionally, you can start the docker containers yourself using:
 
 `docker-compose --profile mailHog up` to start just the mailHog container(required by default 'dev' profile)

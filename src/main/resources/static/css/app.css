@@ -1,18 +1,121 @@
 
+:root {
+    --app-bg: #f8f9fa;
+    --app-surface: #ffffff;
+    --app-text: #212529;
+    --app-text-muted: #5c6670;
+    --app-border: #dee2e6;
+    --app-link: #0068d6;
+    --app-nav-bg: #343a40;
+    --app-nav-text: #f8f9fa;
+    --app-input-bg: #ffffff;
+}
+
+html[data-theme="dark"] {
+    --app-bg: #121212;
+    --app-surface: #1e1e1e;
+    --app-text: #e8eaed;
+    --app-text-muted: #adb5bd;
+    --app-border: #3a3a3a;
+    --app-link: #8ab4f8;
+    --app-nav-bg: #171717;
+    --app-nav-text: #f1f3f5;
+    --app-input-bg: #262626;
+}
+
+body {
+    background-color: var(--app-bg);
+    color: var(--app-text);
+}
+
+a {
+    color: var(--app-link);
+}
+
+.app-navbar {
+    background-color: var(--app-nav-bg);
+}
+
+.app-navbar .navbar-brand,
+.app-navbar .nav-link,
+.app-navbar .p-2 {
+    color: var(--app-nav-text);
+}
+
+.dropdown-menu {
+    background-color: var(--app-surface);
+    border-color: var(--app-border);
+}
+
+.dropdown-item {
+    color: var(--app-text);
+}
+
+.dropdown-item:hover {
+    background-color: rgba(127, 127, 127, 0.15);
+    color: var(--app-text);
+}
+
+.card,
+.card-deck,
+table,
+thead,
+tbody,
+tfoot {
+    color: var(--app-text);
+}
+
+.table {
+    color: var(--app-text);
+}
+
+.table td,
+.table th {
+    border-color: var(--app-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(127, 127, 127, 0.08);
+}
+
+input.form-control,
+textarea.form-control,
+select.form-control {
+    background-color: var(--app-input-bg);
+    border-color: var(--app-border);
+    color: var(--app-text);
+}
+
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-control:focus {
+    border-color: var(--app-link);
+    box-shadow: 0 0 0 0.2rem rgba(138, 180, 248, 0.2);
+}
+
+footer,
+footer small {
+    color: var(--app-text-muted);
+}
+
+.border-top {
+    border-top-color: var(--app-border) !important;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--app-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #acacac;
+    background: var(--app-border);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: var(--app-text-muted);
 }
 
 

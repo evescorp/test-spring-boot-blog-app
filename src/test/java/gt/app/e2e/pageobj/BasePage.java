@@ -10,6 +10,14 @@ public abstract class BasePage<T> {
         return $("body");
     }
 
+    public SelenideElement html() {
+        return $("html");
+    }
+
+    public void toggleTheme() {
+        $("#theme-toggle").click();
+    }
+
     public abstract T open();
 
 }

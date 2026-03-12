@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selenide.refresh;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles(Constants.SPRING_PROFILE_TEST)
 class WebAppIT extends BaseSeleniumTest {
@@ -68,6 +71,22 @@ class WebAppIT extends BaseSeleniumTest {
             .shouldHave(text("You have been signed out"));
 
         testAccessDenied(publicPage);
+    }
+
+    @Test
+    void themePreferencePersistsAcrossNavigationAndRefresh() {
+        PublicPage publicPage = new PublicPage().open();
+
+        publicPage.toggleTheme();
+        String selectedTheme = publicPage.html().getAttribute("data-theme");
+        assertTrue("dark".equals(selectedTheme) || "light".equals(selectedTheme),
+            "Theme should be set to dark or light after toggling");
+
+        publicPage.load("/signup");
+        assertEquals(selectedTheme, publicPage.html().getAttribute("data-theme"));
+
+        refresh();
+        assertEquals(selectedTheme, publicPage.html().getAttribute("data-theme"));
     }
 
     private void testLoggedInHomePage(LoggedInHomePage page) {
