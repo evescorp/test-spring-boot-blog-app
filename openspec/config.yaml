@@ -13,17 +13,3 @@ context: |
   - Keep profile-specific behavior explicit (dev, docker, prod, native/nativeTest).
   - Prefer incremental, reviewable changes with corresponding tests.
   Domain: users create notes/posts, upload files, and view public/private pages based on roles.
-
-rules:
-  proposal:
-    - Start with Problem, Goals, Non-goals, and Proposed Changes.
-    - Call out security, data model, and migration impact explicitly.
-    - Keep scope small enough to implement in 1-3 PR-sized increments.
-  tasks:
-    - Use checkbox tasks ordered by dependency.
-    - Include validation tasks (unit/integration/e2e) for behavior changes.
-    - Note any profile/configuration updates required for dev and docker runs.
-  spec:
-    - Define acceptance criteria in clear Given/When/Then style.
-    - Include authorization and error-handling expectations where applicable.
-    - Reference concrete endpoints/pages/entities affected by the change.
