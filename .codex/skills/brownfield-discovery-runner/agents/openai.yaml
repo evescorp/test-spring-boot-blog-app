@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brownfield Discovery Runner"
+  short_description: "Guide staged brownfield discovery"
+  default_prompt: "Use $brownfield-discovery-runner to guide phased brownfield discovery for this repository."
