@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "create-brownfield-prd": {
+      "source": "adolfoaranaes12/bmad-enhanced",
+      "sourceType": "github",
+      "computedHash": "b2908c07bef7a9cda4089f12506227e504eb7d07203a928eb8f674838dd583de"
+    }
+  }
+}
