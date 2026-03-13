@@ -1,0 +1,177 @@
+name: brownfield-discovery
+version: 1
+description: Brownfield reverse-engineering workflow for extracting current implemented behavior into phased OpenSpec-compatible artifacts without changing the default spec-driven workflow.
+artifacts:
+  - id: domain-map
+    generates: domain-map.md
+    description: Repository discovery artifact that identifies domains, actors, local flows, and boundaries before any authoritative specs are written
+    template: domain-map.md
+    instruction: |
+      Create a brownfield discovery artifact for this repository. This artifact is discovery only.
+
+      Use the companion skill `brownfield-openspec-extractor` while generating this artifact.
+
+      Goals:
+      - identify candidate domains based on real system capabilities, not folder names
+      - identify primary actors for each domain
+      - identify major local flows visible in this repository
+      - identify repository boundaries, handoff points, upstream/downstream dependencies, and external integrations
+      - propose a safe extraction order for later domain-by-domain work
+
+      Rules:
+      - do not generate specs, event-flow, design, or summary content here
+      - do not imply full platform ownership unless the repository proves it
+      - call out weakly supported domains instead of polishing them into certainty
+      - preserve ambiguity when the codebase is messy
+      - optimize for reviewability so a human can stop after this artifact
+
+      Inspect routes, pages, controllers, handlers, services, DB schemas, migrations, validators, tests, jobs, event wiring, API clients, frontend states, and config that materially affects behavior.
+
+      Output only `domain-map.md`.
+    requires: []
+
+  - id: spec
+    generates: specs/**/*.md
+    description: Domain source-of-truth specification generated one domain at a time in fully OpenSpec-compatible format
+    template: spec.md
+    instruction: |
+      Create a single domain `spec.md` for one approved domain from the domain map. This artifact is authoritative source-of-truth for confirmed behavior only.
+
+      Use the companion skill `brownfield-openspec-extractor` while generating this artifact.
+
+      Critical compatibility rule:
+      - the resulting `spec.md` must remain fully OpenSpec-compatible
+      - keep the canonical structure:
+        # <Domain Name>
+        ## Purpose
+        ## Requirements
+        ### Requirement: <name>
+        The system SHALL ...
+        #### Scenario: <name>
+        - GIVEN ...
+        - WHEN ...
+        - THEN ...
+
+      Truth rules:
+      - include only confirmed behavior supported by implementation, tests, validations, persistence logic, or explicit state transitions in this repository
+      - do not include inferred or unclear behavior
+      - do not infer lifecycle states, policies, or validations from naming or UI copy alone
+      - do not silently cross repository boundaries
+      - prefer incomplete but honest coverage over complete but speculative coverage
+
+      Scope rules:
+      - generate one domain spec at a time unless the user explicitly requests batch generation
+      - use domain language, not implementation layer language
+      - describe externally observable behavior, not implementation details
+      - do not place Mermaid diagrams, event flow, or design-oriented notes in `spec.md`
+
+      If evidence is insufficient for a candidate requirement, omit it and let uncertainty live in later supporting artifacts.
+
+      Output only `specs/<domain>/spec.md`.
+    requires:
+      - domain-map
+
+  - id: event-flow
+    generates: specs/**/event-flow.md
+    description: Supporting temporal narrative for one domain, including boundary-aware flow classification and explicit uncertainty notes
+    template: event-flow.md
+    instruction: |
+      Create `event-flow.md` only for a domain whose `spec.md` already exists in this brownfield workflow. This artifact is supporting material, not the source of truth.
+
+      Use the companion skill `brownfield-openspec-extractor` while generating this artifact.
+
+      Required content:
+      - flow summary
+      - flow classification as one of:
+        - Local complete flow
+        - Local partial flow
+        - Boundary flow
+      - textual command -> event -> view narrative
+      - explicit repository boundary notes
+      - uncertainty notes when the flow is incomplete or partially inferred
+
+      Rules:
+      - represent real user actions or system triggers only
+      - do not invent domain events or lifecycle states
+      - do not restate speculative end-to-end behavior beyond repository evidence
+      - use Mermaid sequence diagrams only when they materially improve understanding of a non-trivial flow
+      - do not move uncertain behavior into the spec; keep it here as notes if needed
+
+      Default to one meaningful flow per domain unless the user asks for additional flows.
+
+      Output only `specs/<domain>/event-flow.md`.
+    requires:
+      - spec
+
+  - id: design
+    generates: specs/**/design.md
+    description: Non-authoritative implementation notes for one domain covering architecture, persistence, integrations, and structural observations
+    template: design.md
+    instruction: |
+      Create `design.md` only for a domain whose `spec.md` already exists in this brownfield workflow. This artifact is technical and explanatory, not normative.
+
+      Use the companion skill `brownfield-openspec-extractor` while generating this artifact.
+
+      Include only implementation-oriented notes such as:
+      - entry points and collaborating components
+      - architectural observations
+      - DB entities, repositories, and meaningful reads/writes
+      - jobs, queues, schedulers, or subscribers
+      - external systems and integration boundaries
+      - technical inconsistencies or constraints visible in the repository
+
+      Rules:
+      - do not redefine business truth here
+      - do not copy event-flow narrative unless needed to explain structure
+      - keep observations grounded in code
+      - make repository boundaries explicit when interactions leave the repo
+      - optimize for engineering understanding, not polished product storytelling
+
+      Default to one domain at a time.
+
+      Output only `specs/<domain>/design.md`.
+    requires:
+      - event-flow
+
+  - id: summary
+    generates: brownfield-analysis-summary.md
+    description: Repository-level synthesis of discovered domains, major flows, boundaries, and ambiguity after domain-level extraction
+    template: summary.md
+    instruction: |
+      Create a repository-level brownfield synthesis after domain discovery and at least the completed domain artifacts that are actually available. This artifact is non-authoritative support for understanding repository scope.
+
+      Use the companion skill `brownfield-openspec-extractor` while generating this artifact.
+
+      Include:
+      - discovered domains
+      - primary actors
+      - major local or boundary-crossing flows
+      - repository role inside the wider platform as proven by evidence
+      - upstream/downstream dependencies and handoff points
+      - major ambiguities, blind spots, and cross-repository limits
+
+      Rules:
+      - distinguish confirmed repository behavior from inferred or unclear areas
+      - do not claim platform-wide end-to-end truth without direct evidence
+      - preserve unresolved messiness instead of normalizing it away
+      - summarize what is known, what was intentionally excluded, and what remains unclear
+
+      Output only `brownfield-analysis-summary.md`.
+    requires:
+      - design
+
+apply:
+  requires:
+    - summary
+  tracks: brownfield-analysis-summary.md
+  instruction: |
+    This schema is documentation-only. Do not implement product changes during apply.
+
+    Prefer phased execution with human checkpoints:
+    1. domain-map
+    2. one domain spec
+    3. that domain's event-flow
+    4. that domain's design
+    5. repository summary
+
+    Use `brownfield-openspec-extractor` during artifact generation and preserve the distinction between confirmed, inferred, and unclear behavior.
