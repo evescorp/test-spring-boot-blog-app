@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brownfield OpenSpec Extractor"
+  short_description: "Extract current truth into OpenSpec docs"
+  default_prompt: "Use $brownfield-openspec-extractor to reverse-engineer this repository into evidence-backed OpenSpec artifacts."
