@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "brownfield-onboarding": {
+      "source": "cyberelf/agent_skills",
+      "sourceType": "github",
+      "computedHash": "6a228af3d2fd4b946679c6e309413d1bab1d5751f7ea0cfef2ef1db94205f424"
+    },
     "create-brownfield-prd": {
       "source": "adolfoaranaes12/bmad-enhanced",
       "sourceType": "github",
